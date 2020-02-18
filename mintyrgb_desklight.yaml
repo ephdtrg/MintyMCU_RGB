@@ -1,5 +1,5 @@
 esphome:
-  name: mintymcu_ir
+  name: mintymcu_rgb
   platform: ESP8266
   board: nodemcuv2
 
@@ -26,34 +26,74 @@ ota:
 
 sensor:
   - platform: wifi_signal
-    name: "MintyMCU_IR WiFi Signal Sensor"
+    name: "MintyMCU_RGB WiFi Signal Sensor"
     update_interval: 60s
   - platform: uptime
-    name: "MintyMCU_IR Uptime Sensor"
+    name: "MintyMCU_RGB Uptime Sensor"
     update_interval: 60s
     filters:
       - lambda: return x / (24 * 3600);
-    unit_of_measumerent: "days"
+    unit_of_measurement: "days"
+
+switch:
+  - platform: restart
+    name: "MintyMCU_RGB Restart"
+  - platform: template
+    name: "MintyMCU_RGB DeskLight Default Color"
+    turn_on_action:
+        - light.turn_on:
+            id: mintyrgb_desklight
+            brightness: 50%
+            red: 4%
+            green: 100%
+            blue: 57%
 
 binary_sensor:
     - platform: status
-      name: "MintyMCU_IR Status"
+      name: "MintyMCU_RGB Status"
 
 text_sensor:
   - platform: wifi_info
     ip_address:
-      name: "MintyMCU_IR IP Address"
+      name: "MintyMCU_RGB IP Address"
     ssid:
-      name: "MintyMCU_IR Connected SSID"
+      name: "MintyMCU_RGB Connected SSID"
     bssid:
-      name: "MintyMCU_IR Connected BSSID"
+      name: "MintyMCU_RGB Connected BSSID"
   - platform: version
-    name: "MintyMCU_IR ESPHome Version"
+    name: "MintyMCU_RGB ESPHome Version"
 
 light:
   - platform: neopixelbus
     type: GRB
-    pin: GPIO23
+    pin: GPIO3
     num_leds: 144
     name: "MintyRGB DeskLight"
-    color_correct: [15%, 15%, 15%]
+    id: mintyrgb_desklight
+    # color_correct: [50%, 50%, 50%]
+    effects:
+      - addressable_rainbow:
+      - lambda:
+          name: My Custom Effect
+          update_interval: 0.05s
+          lambda: |-
+            static int brightnessLevel = 0;
+            float sinVal;
+            auto call = id(mintyrgb_desklight).turn_on();
+            call.set_rgb(0.04, 1, 0.57);
+            call.set_transition_length(50);
+            sinVal = sin(brightnessLevel*(3.1412/180));
+            // ESP_LOGD("sinVal", str(sinVal));
+            if (sinVal < 180) {
+              brightnessLevel += 1;
+            }
+
+            if (sinVal < 0 ) {
+              sinVal *= -1;
+            }
+            call.set_brightness(sinVal);
+            call.perform();
+      - addressable_scan:
+          name: Scan Effect With Custom Values
+          move_interval: 50ms
+          scan_width: 30
