@@ -72,28 +72,39 @@ light:
     id: mintyrgb_desklight
     # color_correct: [50%, 50%, 50%]
     effects:
+      - flicker:
+          name: Flicker Effect (80%, 4%)
+          alpha: 80%
+          intensity: 4%
       - addressable_rainbow:
-      - lambda:
-          name: My Custom Effect
-          update_interval: 0.05s
-          lambda: |-
-            static int brightnessLevel = 0;
-            float sinVal;
-            auto call = id(mintyrgb_desklight).turn_on();
-            call.set_rgb(0.04, 1, 0.57);
-            call.set_transition_length(50);
-            sinVal = sin(brightnessLevel*(3.1412/180));
-            // ESP_LOGD("sinVal", str(sinVal));
-            if (sinVal < 180) {
-              brightnessLevel += 1;
-            }
-
-            if (sinVal < 0 ) {
-              sinVal *= -1;
-            }
-            call.set_brightness(sinVal);
-            call.perform();
       - addressable_scan:
-          name: Scan Effect With Custom Values
-          move_interval: 50ms
-          scan_width: 30
+          name: Scan Effect (150ms, 35 leds)
+          move_interval: 150ms
+          scan_width: 35
+      - addressable_flicker:
+          name: Addressable Flicker Effect (150ms, 50%)
+          update_interval: 150ms
+          intensity: 50%
+      - addressable_twinkle:
+          name: Twinkle Effect (4ms, 15%)
+          progress_interval: 4ms
+          twinkle_probability: 15%
+      - addressable_fireworks:
+          name: Fireworks Effect (50ms, 10%, 30)
+          update_interval: 50ms
+          spark_probability: 10%
+          use_random_color: false
+          fade_out_rate: 30
+      - addressable_color_wipe:
+          name: Color Wipe Effect (50ms, 5 leds)
+          colors:
+            - red: 4%
+              green: 100%
+              blue: 57%
+              num_leds: 1
+            - red: 4%
+              green: 80%
+              blue: 57%
+              num_leds: 5
+          add_led_interval: 100ms
+          reverse: False
