@@ -43,7 +43,7 @@ switch:
     turn_on_action:
         - light.turn_on:
             id: mintyrgb_desklight
-            brightness: 50%
+            brightness: 80%
             red: 4%
             green: 100%
             blue: 57%
@@ -70,7 +70,7 @@ light:
     num_leds: 144
     name: "MintyRGB DeskLight"
     id: mintyrgb_desklight
-    # color_correct: [50%, 50%, 50%]
+    color_correct: [50%, 50%, 50%]
     effects:
       - flicker:
           name: Flicker Effect (80%, 4%)
