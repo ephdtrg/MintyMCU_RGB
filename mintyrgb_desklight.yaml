@@ -43,7 +43,7 @@ switch:
     turn_on_action:
         - light.turn_on:
             id: mintyrgb_desklight
-            brightness: 80%
+            brightness: 98%
             red: 4%
             green: 100%
             blue: 57%
@@ -78,8 +78,8 @@ light:
           intensity: 4%
       - addressable_rainbow:
       - addressable_scan:
-          name: Scan Effect (150ms, 35 leds)
-          move_interval: 150ms
+          name: Scan Effect (200ms, 35 leds)
+          move_interval: 50ms
           scan_width: 35
       - addressable_flicker:
           name: Addressable Flicker Effect (150ms, 50%)
@@ -95,16 +95,24 @@ light:
           spark_probability: 10%
           use_random_color: false
           fade_out_rate: 30
+      - automation:
+          name: Minty Color Effect
+          sequence:
+            - light.addressable_set:
+                id: mintyrgb_desklight
+                red: 4%
+                green: 100%
+                blue: 57%
       - addressable_color_wipe:
-          name: Color Wipe Effect (50ms, 5 leds)
+          name: Minty-Purple Color Wipe
           colors:
             - red: 4%
               green: 100%
               blue: 57%
-              num_leds: 1
-            - red: 4%
-              green: 80%
-              blue: 57%
-              num_leds: 5
-          add_led_interval: 100ms
-          reverse: False
+              num_leds: 30
+            - red: 100%
+              green: 0%
+              blue: 50%
+              num_leds: 10
+          add_led_interval: 50ms
+
